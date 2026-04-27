@@ -1,0 +1,28 @@
+:root {
+  color: #f0ead7;
+  background: #111317;
+  font-family: "Courier New", Courier, monospace;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top, #23354c 0%, #111317 48%, #0c0d10 100%);
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}

@@ -1,0 +1,220 @@
+[gd_scene load_steps=15 format=3 uid="uid://tax_lawyer_main_street"]
+
+[ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_tax_office_street.png" id="1_bg"]
+[ext_resource type="Script" path="res://scripts/MainStreet.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_top_hud_bar.png" id="3_top_hud"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_bottom_status_bar.png" id="4_bottom_hud"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_dialogue_box.png" id="5_dialogue"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_choice_menu_box.png" id="6_choices"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_money.png" id="7_money"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_stamina.png" id="8_stamina"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_audit.png" id="9_audit"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_clients.png" id="10_clients"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_clock.png" id="11_clock"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(30, 84)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(24, 220)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc_block"]
+size = Vector2(48, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction"]
+size = Vector2(190, 150)
+
+[node name="MainStreet" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(640, 360)
+scale = Vector2(0.765550, 0.765143)
+texture = ExtResource("1_bg")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="LeftBoundary" type="StaticBody2D" parent="World"]
+position = Vector2(58, 520)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LeftBoundary"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="RightBoundary" type="StaticBody2D" parent="World"]
+position = Vector2(1222, 520)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/RightBoundary"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Player" type="CharacterBody2D" parent="World"]
+position = Vector2(300, 520)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Player"]
+position = Vector2(0, 36)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
+texture_filter = 1
+scale = Vector2(0.42, 0.42)
+
+[node name="ElderlyClient" type="Node2D" parent="World"]
+position = Vector2(802, 520)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="World/ElderlyClient"]
+texture_filter = 1
+scale = Vector2(0.42, 0.42)
+
+[node name="InteractionArea" type="Area2D" parent="World/ElderlyClient"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ElderlyClient/InteractionArea"]
+position = Vector2(0, 24)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopHud" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(640, 40)
+scale = Vector2(0.78, 0.58)
+texture = ExtResource("3_top_hud")
+
+[node name="BottomHud" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(640, 670)
+scale = Vector2(0.78, 0.44)
+texture = ExtResource("4_bottom_hud")
+
+[node name="IconClients" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(890, 38)
+scale = Vector2(0.13, 0.13)
+texture = ExtResource("10_clients")
+
+[node name="IconClock" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(1035, 38)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("11_clock")
+
+[node name="IconMoney" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(105, 672)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("7_money")
+
+[node name="IconStamina" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(365, 672)
+scale = Vector2(0.10, 0.10)
+texture = ExtResource("8_stamina")
+
+[node name="IconAudit" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(826, 672)
+scale = Vector2(0.10, 0.10)
+texture = ExtResource("9_audit")
+
+[node name="TopHudText" type="Label" parent="UI"]
+offset_left = 910.0
+offset_top = 20.0
+offset_right = 1190.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 22
+text = "Clients 0/5    Time 1:30"
+
+[node name="BottomHudText" type="Label" parent="UI"]
+offset_left = 142.0
+offset_top = 650.0
+offset_right = 1180.0
+offset_bottom = 696.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 22
+text = "Money $850      Stamina 100                         Audit Risk Medium"
+
+[node name="Prompt" type="Label" parent="UI"]
+visible = false
+offset_left = 684.0
+offset_top = 362.0
+offset_right = 940.0
+offset_bottom = 398.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 20
+text = "Press E to talk"
+horizontal_alignment = 1
+
+[node name="NpcBlocker" type="StaticBody2D" parent="World/ElderlyClient"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/ElderlyClient/NpcBlocker"]
+position = Vector2(0, 36)
+shape = SubResource("RectangleShape2D_npc_block")
+
+[node name="DialoguePanel" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 118.0
+offset_top = 92.0
+offset_right = 1162.0
+offset_bottom = 330.0
+
+[node name="DialogueBox" type="Sprite2D" parent="UI/DialoguePanel"]
+texture_filter = 1
+position = Vector2(362, 118)
+scale = Vector2(0.86, 0.54)
+texture = ExtResource("5_dialogue")
+
+[node name="DialogueText" type="Label" parent="UI/DialoguePanel"]
+clip_contents = true
+offset_left = 56.0
+offset_top = 56.0
+offset_right = 646.0
+offset_bottom = 188.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 18
+text = "I only have receipts. Can you sort them out?"
+autowrap_mode = 2
+vertical_alignment = 1
+
+[node name="ChoiceBox" type="Sprite2D" parent="UI/DialoguePanel"]
+texture_filter = 1
+position = Vector2(782, 118)
+scale = Vector2(0.82, 0.58)
+texture = ExtResource("6_choices")
+
+[node name="Choices" type="VBoxContainer" parent="UI/DialoguePanel"]
+clip_contents = true
+offset_left = 606.0
+offset_top = 58.0
+offset_right = 948.0
+offset_bottom = 178.0
+theme_override_constants/separation = 6
+
+[node name="Choice1" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(342, 32)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 17
+text = "1. Missing docs"
+text_overrun_behavior = 3
+
+[node name="Choice2" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(342, 32)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 17
+text = "2. Accept receipts"
+text_overrun_behavior = 3
+
+[node name="Choice3" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(342, 32)
+mouse_filter = 0
+theme_override_font_sizes/font_size = 17
+text = "3. CRA guidance"
+text_overrun_behavior = 3

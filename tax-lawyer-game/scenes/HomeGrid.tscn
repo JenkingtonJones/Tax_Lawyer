@@ -1,0 +1,74 @@
+[gd_scene load_steps=7 format=3 uid="uid://tax_lawyer_home_grid"]
+
+[ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_city_map.png" id="1_map"]
+[ext_resource type="Script" path="res://scripts/HomeGrid.gd" id="2_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(28, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_law_office"]
+size = Vector2(176, 122)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tax_office"]
+size = Vector2(200, 130)
+
+[node name="HomeGrid" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(640, 360)
+scale = Vector2(0.753828, 0.777538)
+texture = ExtResource("1_map")
+
+[node name="Locations" type="Node2D" parent="."]
+
+[node name="LawOffice" type="Area2D" parent="Locations"]
+position = Vector2(234, 284)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/LawOffice"]
+shape = SubResource("RectangleShape2D_law_office")
+
+[node name="TaxOffice" type="Area2D" parent="Locations"]
+position = Vector2(548, 242)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/TaxOffice"]
+shape = SubResource("RectangleShape2D_tax_office")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(548, 284)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Player"]
+texture_filter = 1
+scale = Vector2(0.23, 0.23)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Prompt" type="Label" parent="UI"]
+visible = false
+offset_left = 438.0
+offset_top = 616.0
+offset_right = 842.0
+offset_bottom = 650.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 20
+text = "Press E"
+horizontal_alignment = 1
+
+[node name="HudHint" type="Label" parent="UI"]
+offset_left = 462.0
+offset_top = 672.0
+offset_right = 818.0
+offset_bottom = 704.0
+theme_override_colors/font_color = Color(0.603922, 0.752941, 0.478431, 1)
+theme_override_font_sizes/font_size = 17
+text = "Money $850      Clients 0/5      Risk Medium"
+horizontal_alignment = 1

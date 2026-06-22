@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://tax_lawyer_home_grid"]
+[gd_scene load_steps=8 format=3 uid="uid://tax_lawyer_home_grid"]
 
 [ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_city_map.png" id="1_map"]
 [ext_resource type="Script" path="res://scripts/HomeGrid.gd" id="2_script"]
@@ -11,6 +11,9 @@ size = Vector2(176, 122)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tax_office"]
 size = Vector2(200, 130)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gelato_labs"]
+size = Vector2(190, 126)
 
 [node name="HomeGrid" type="Node2D"]
 script = ExtResource("2_script")
@@ -34,6 +37,12 @@ position = Vector2(548, 242)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/TaxOffice"]
 shape = SubResource("RectangleShape2D_tax_office")
+
+[node name="GelatoLabs" type="Area2D" parent="Locations"]
+position = Vector2(305, 410)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/GelatoLabs"]
+shape = SubResource("RectangleShape2D_gelato_labs")
 
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(548, 284)

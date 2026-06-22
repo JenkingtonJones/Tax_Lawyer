@@ -7,9 +7,12 @@ const WALK_MIN := Vector2(50, 92)
 const WALK_MAX := Vector2(1230, 604)
 const STREET_SCENE_PATH := "res://scenes/MainStreet.tscn"
 const OFFICE_SCENE_PATH := "res://scenes/OfficeIntake.tscn"
+const CRA_CALL_SCENE_PATH := "res://scenes/CRACall.tscn"
+const GELATO_LABS_SCENE_PATH := "res://scenes/GelatoLabs.tscn"
 const SPAWN_POINTS := {
 	"law_office": Vector2(234, 318),
 	"tax_office": Vector2(548, 284),
+	"gelato_labs": Vector2(305, 440),
 }
 
 var current_location := ""
@@ -53,9 +56,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		"LawOffice":
 			if _office_available():
 				_game_state().set("map_spawn", "law_office")
-				get_tree().change_scene_to_file(OFFICE_SCENE_PATH)
+				get_tree().change_scene_to_file(_office_scene_path())
 			else:
 				prompt.text = "Law office: appointment needed"
+				prompt.show()
+		"GelatoLabs":
+			if _gelato_labs_available():
+				_game_state().set("map_spawn", "gelato_labs")
+				get_tree().change_scene_to_file(GELATO_LABS_SCENE_PATH)
+			else:
+				prompt.text = "Gelato Labs: no CRA meeting"
 				prompt.show()
 
 func _setup_animations() -> void:
@@ -88,7 +98,13 @@ func _place_player_at_spawn() -> void:
 		spawn_key = "tax_office"
 
 	player.position = SPAWN_POINTS[spawn_key]
-	current_location = "LawOffice" if spawn_key == "law_office" else "TaxOffice"
+	match spawn_key:
+		"law_office":
+			current_location = "LawOffice"
+		"gelato_labs":
+			current_location = "GelatoLabs"
+		_:
+			current_location = "TaxOffice"
 	_update_prompt()
 
 func _on_location_body_entered(body: Node2D, location_name: StringName) -> void:
@@ -111,6 +127,8 @@ func _update_prompt() -> void:
 			prompt.text = "Press E: Tax Office street"
 		"LawOffice":
 			prompt.text = "Press E: Law Office" if _office_available() else "Law office: appointment needed"
+		"GelatoLabs":
+			prompt.text = "Press E: Gelato Labs" if _gelato_labs_available() else "Gelato Labs: no CRA meeting"
 		_:
 			prompt.hide()
 			return
@@ -121,12 +139,32 @@ func _office_available() -> bool:
 	var game_state := _game_state()
 	return bool(game_state.get("office_unlocked")) or bool(game_state.get("office_completed"))
 
+func _office_scene_path() -> String:
+	return CRA_CALL_SCENE_PATH if _cra_call_needed() else OFFICE_SCENE_PATH
+
+func _cra_call_needed() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("cra_guidance_requested")) and not bool(game_state.get("cra_call_completed"))
+
+func _gelato_labs_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("gelato_labs_unlocked")) and not bool(game_state.get("cra_meeting_scheduled"))
+
 func _update_hud_hint() -> void:
 	var game_state := _game_state()
-	hud_hint.text = "Money $%d      Clients %d/5      Risk %s" % [
+	var objective := "Return to client"
+	if _cra_call_needed():
+		objective = "CRA call: Law Office"
+	elif _gelato_labs_available():
+		objective = "Meet CRA: Gelato Labs"
+	elif bool(game_state.get("cra_meeting_scheduled")) and not bool(game_state.get("client_resolved")):
+		objective = "Tell client: Tax Office"
+
+	hud_hint.text = "Money $%d      Clients %d/5      Risk %s      %s" % [
 		int(game_state.get("money")),
 		int(game_state.get("clients_completed")),
 		_audit_label(),
+		objective,
 	]
 
 func _audit_label() -> String:

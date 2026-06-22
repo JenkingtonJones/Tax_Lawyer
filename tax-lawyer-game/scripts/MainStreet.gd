@@ -30,6 +30,17 @@ const FACILITATOR_FOLLOW_UPS := [
 const THANK_YOU_DIALOGUE := "Thank you for your help."
 const OPTION_2_RESULT := "You accept the receipts and hope the audit gods are merciful. When you get back to the office, you'll have to reconcile them. That sounds fun."
 const OPTION_3_RESULT := "You explain that her eligible remittance variance may require a provisional adjustment to the prior-period instalment allocation before the carry-forward balance can be reconciled against the current filing position. She seems reassured."
+const CRA_GUIDANCE_START_FOLLOW_UPS := [
+	"She leans closer. \"Can you get that guidance for me? I tried calling once, but the music asked me a question.\"",
+	"You agree to make the call from the office. This will require closed blinds, a notepad, and the kind of patience usually reserved for classified documents.",
+]
+const CRA_GUIDANCE_WAITING_CALL := "You still need to make the CRA guidance call from the Law Office. The client clutches the receipt bag like it might testify against her."
+const CRA_GUIDANCE_WAITING_GELATO := "CRA will not finish this over the phone. A representative is waiting at Gelato Labs, which is apparently a normal sentence now."
+const CRA_GUIDANCE_DELIVERY := "You return with news: CRA guidance is now available. She should bring the receipt bag, the missing slips, and anything labelled maybe taxes."
+const CRA_GUIDANCE_DELIVERY_FOLLOW_UPS := [
+	"\"Oh,\" she says. \"Then I should bring the blue suitcase too.\"",
+	"The file is still strange, but it finally has a route: sorted materials, scheduled guidance, and no filing until the sticky receipts are identified.",
+]
 const INITIAL_CHOICE_TEXTS := ["1. Missing docs", "2. Accept receipts", "3. CRA guidance"]
 const FACILITATOR_CHOICE_TEXTS := ["1. Oh my.", "2. That's hard.", "3. Say more."]
 
@@ -44,6 +55,8 @@ var near_client := false
 var client_resolved := false
 var waiting_for_continue := false
 var pending_scene_path := ""
+var result_follow_ups: Array = []
+var result_follow_up_index := 0
 var vertical_velocity := 0.0
 var is_jumping := false
 
@@ -185,6 +198,28 @@ func _open_dialogue() -> void:
 	if client_resolved:
 		_set_result_layout()
 		_queue_map_return(true)
+	elif _cra_meeting_scheduled():
+		_complete_cra_guidance_delivery()
+		dialogue_panel.show()
+		return
+	elif _cra_call_completed():
+		_set_result_layout()
+		_queue_map_return(true)
+		_set_dialogue_text(CRA_GUIDANCE_WAITING_GELATO)
+		choice_box.hide()
+		choices.hide()
+		dialogue_panel.show()
+		_show_continue_prompt()
+		return
+	elif _cra_guidance_requested():
+		_set_result_layout()
+		_queue_map_return(true)
+		_set_dialogue_text(CRA_GUIDANCE_WAITING_CALL)
+		choice_box.hide()
+		choices.hide()
+		dialogue_panel.show()
+		_show_continue_prompt()
+		return
 	else:
 		_set_menu_layout()
 	_set_dialogue_text(THANK_YOU_DIALOGUE if client_resolved else INITIAL_DIALOGUE)
@@ -214,8 +249,7 @@ func _select_choice(option: int) -> void:
 			_queue_map_return(true)
 			_apply_choice(0, 20, 150, 1, OPTION_2_RESULT)
 		3:
-			_queue_map_return(true)
-			_apply_choice(-5, -5, 0, 1, OPTION_3_RESULT)
+			_start_cra_guidance_quest()
 
 func _start_missing_docs_story() -> void:
 	missing_docs_active = true
@@ -236,12 +270,35 @@ func _select_facilitator_response() -> void:
 		_set_dialogue_text(follow_up)
 		choice_1.grab_focus()
 
-func _apply_choice(stamina_delta: int, audit_delta: int, money_delta: int, client_delta: int, result_text: String) -> void:
+func _start_cra_guidance_quest() -> void:
+	var game_state := _game_state()
+	game_state.call("start_cra_guidance_quest")
+	_queue_map_return(true)
+	_show_result_pages(OPTION_3_RESULT, CRA_GUIDANCE_START_FOLLOW_UPS)
+	_play_worried_briefly()
+
+func _complete_cra_guidance_delivery() -> void:
+	_queue_map_return(true)
+	_apply_choice(-3, -12, 0, 1, CRA_GUIDANCE_DELIVERY, CRA_GUIDANCE_DELIVERY_FOLLOW_UPS)
+
+func _show_result_pages(result_text: String, follow_up_pages: Array = []) -> void:
+	result_follow_ups = follow_up_pages
+	result_follow_up_index = 0
+	_update_hud()
+	_set_result_layout()
+	_set_dialogue_text(result_text)
+	choice_box.hide()
+	choices.hide()
+	_show_continue_prompt()
+
+func _apply_choice(stamina_delta: int, audit_delta: int, money_delta: int, client_delta: int, result_text: String, follow_up_pages: Array = []) -> void:
 	stamina = clampi(stamina + stamina_delta, 0, 100)
 	audit_risk = clampi(audit_risk + audit_delta, 0, 100)
 	money += money_delta
 	clients_completed = clampi(clients_completed + client_delta, 0, 5)
 	client_resolved = true
+	result_follow_ups = follow_up_pages
+	result_follow_up_index = 0
 	_game_state().call("save_street_state", money, stamina, audit_risk, clients_completed, client_resolved)
 	_update_hud()
 	_set_result_layout()
@@ -252,6 +309,13 @@ func _apply_choice(stamina_delta: int, audit_delta: int, money_delta: int, clien
 	_play_worried_briefly()
 
 func _close_dialogue() -> void:
+	if result_follow_up_index < result_follow_ups.size():
+		_set_result_layout()
+		_set_dialogue_text(result_follow_ups[result_follow_up_index])
+		result_follow_up_index += 1
+		_show_continue_prompt()
+		return
+
 	dialogue_panel.hide()
 	if pending_scene_path != "":
 		var next_scene_path := pending_scene_path
@@ -267,7 +331,12 @@ func _close_dialogue() -> void:
 
 func _show_continue_prompt() -> void:
 	waiting_for_continue = true
-	prompt.text = "Press E to open map" if pending_scene_path != "" else "Press E to continue"
+	if result_follow_up_index < result_follow_ups.size():
+		prompt.text = "Press E to continue"
+	elif pending_scene_path != "":
+		prompt.text = "Press E to open map"
+	else:
+		prompt.text = "Press E to continue"
 	prompt.show()
 
 func _set_choice_texts(choice_texts: Array) -> void:
@@ -336,6 +405,15 @@ func _load_state() -> void:
 	audit_risk = int(game_state.get("audit_risk"))
 	clients_completed = int(game_state.get("clients_completed"))
 	client_resolved = bool(game_state.get("client_resolved"))
+
+func _cra_guidance_requested() -> bool:
+	return bool(_game_state().get("cra_guidance_requested"))
+
+func _cra_call_completed() -> bool:
+	return bool(_game_state().get("cra_call_completed"))
+
+func _cra_meeting_scheduled() -> bool:
+	return bool(_game_state().get("cra_meeting_scheduled"))
 
 func _game_state() -> Node:
 	var root := get_tree().root

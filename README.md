@@ -106,6 +106,37 @@ Included launch files:
 - `Dog Chew Apocalypse`
 - `Hot Chicken Incident`
 
+## Godot Vertical Slice
+
+The `tax-lawyer-game` folder contains the current Godot 4 build used for the deployable web version.
+
+Current playable flow:
+
+1. Start at `HomeGrid.tscn`.
+2. Enter the Tax Office street and talk to the elderly client.
+3. Choose `CRA guidance` to start the CRA guidance quest.
+4. Return to the map and go to the Law Office for the spy-like CRA phone call.
+5. Answer the five 3-option CRA call questions.
+6. After the successful call, return to the map and go to Gelato Labs.
+7. Walk to Agent Ledger, press E, and schedule the guidance meeting.
+8. Return to the elderly client and tell her CRA guidance is available.
+
+Godot controls:
+
+- Arrow keys: move on the map.
+- Left/right arrows: walk in side-view scenes.
+- Space or Up: jump in side-view scenes.
+- E: interact or advance dialogue.
+- 1, 2, 3: choose dialogue answers.
+
+Godot web export:
+
+```bash
+godot --headless --path tax-lawyer-game --export-release Web builds/web/index.html
+```
+
+The deployable web files live in `tax-lawyer-game/builds/web`.
+
 ## Run
 
 ```bash
@@ -129,6 +160,10 @@ npm run build
 - `src/data/cases.js`: case writing, office choices, and battle actions
 - `src/state/gameState.js`: lightweight campaign state
 - `public/assets/concepts/tax-lawyer-city-map-v1.png`: map art used in the prototype
+- `tax-lawyer-game/scenes`: Godot scenes for the map, street, office call, Gelato Labs, and office intake
+- `tax-lawyer-game/scripts`: Godot gameplay scripts and quest state
+- `tax-lawyer-game/assets/processed`: Godot-ready backgrounds, UI, player, NPC, and generated quest assets
+- `tax-lawyer-game/builds/web`: exported Godot web build used for deployment
 
 ## Engine Choice
 

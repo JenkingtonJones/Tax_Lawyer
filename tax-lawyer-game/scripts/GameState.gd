@@ -11,6 +11,12 @@ var cra_guidance_requested := false
 var cra_call_completed := false
 var gelato_labs_unlocked := false
 var cra_meeting_scheduled := false
+var meaning_of_case_unlocked := false
+var powder_lab_completed := false
+var import_warehouse_unlocked := false
+var warehouse_evidence_completed := false
+var tribunal_unlocked := false
+var meaning_of_case_completed := false
 var map_spawn := "tax_office"
 
 func save_street_state(new_money: int, new_stamina: int, new_audit_risk: int, new_clients_completed: int, resolved: bool) -> void:
@@ -39,3 +45,26 @@ func schedule_cra_guidance_meeting(new_stamina: int) -> void:
 	stamina = new_stamina
 	cra_meeting_scheduled = true
 	map_spawn = "tax_office"
+
+func unlock_meaning_of_case() -> void:
+	meaning_of_case_unlocked = true
+
+func complete_powder_lab(new_stamina: int) -> void:
+	stamina = new_stamina
+	powder_lab_completed = true
+	import_warehouse_unlocked = true
+	map_spawn = "gelato_labs"
+
+func complete_warehouse_investigation(new_stamina: int) -> void:
+	stamina = new_stamina
+	warehouse_evidence_completed = true
+	tribunal_unlocked = true
+	map_spawn = "import_warehouse"
+
+func complete_meaning_of_case() -> void:
+	money += 260
+	stamina = clampi(stamina - 6, 0, 100)
+	audit_risk = clampi(audit_risk - 12, 0, 100)
+	clients_completed = clampi(clients_completed + 1, 0, 5)
+	meaning_of_case_completed = true
+	map_spawn = "tribunal"

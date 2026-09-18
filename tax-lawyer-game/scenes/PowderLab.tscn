@@ -1,0 +1,223 @@
+[gd_scene load_steps=15 format=3 uid="uid://tax_lawyer_powder_lab"]
+
+[ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_powder_lab.png" id="1_bg"]
+[ext_resource type="Script" path="res://scripts/InvestigationScene.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_top_hud_bar.png" id="3_top_hud"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_bottom_status_bar.png" id="4_bottom_hud"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_dialogue_box.png" id="5_dialogue"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/panels/ui_choice_menu_box.png" id="6_choices"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_money.png" id="7_money"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_stamina.png" id="8_stamina"]
+[ext_resource type="Texture2D" path="res://assets/processed/ui/icons/icon_audit.png" id="9_audit"]
+[ext_resource type="Texture2D" path="res://assets/processed/npcs/powder_lab/dr_affogato.png" id="10_npc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(30, 84)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(24, 220)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_evidence"]
+size = Vector2(170, 150)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
+size = Vector2(190, 180)
+
+[node name="PowderLab" type="Node2D"]
+script = ExtResource("2_script")
+investigation_id = "powder_lab"
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(640, 360)
+scale = Vector2(0.76555, 0.765143)
+texture = ExtResource("1_bg")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="LeftBoundary" type="StaticBody2D" parent="World"]
+position = Vector2(50, 540)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/LeftBoundary"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="RightBoundary" type="StaticBody2D" parent="World"]
+position = Vector2(1230, 540)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/RightBoundary"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Player" type="CharacterBody2D" parent="World"]
+position = Vector2(350, 540)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Player"]
+position = Vector2(0, 36)
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
+texture_filter = 1
+scale = Vector2(0.42, 0.42)
+
+[node name="NPC" type="Node2D" parent="World"]
+position = Vector2(875, 470)
+
+[node name="Sprite" type="Sprite2D" parent="World/NPC"]
+texture_filter = 1
+scale = Vector2(0.17, 0.17)
+texture = ExtResource("10_npc")
+
+[node name="InteractionArea" type="Area2D" parent="World/NPC"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/NPC/InteractionArea"]
+position = Vector2(0, 46)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="Evidence" type="Node2D" parent="World"]
+
+[node name="StationA" type="Area2D" parent="World/Evidence"]
+position = Vector2(175, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Evidence/StationA"]
+shape = SubResource("RectangleShape2D_evidence")
+
+[node name="StationB" type="Area2D" parent="World/Evidence"]
+position = Vector2(620, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Evidence/StationB"]
+shape = SubResource("RectangleShape2D_evidence")
+
+[node name="StationC" type="Area2D" parent="World/Evidence"]
+position = Vector2(1090, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Evidence/StationC"]
+shape = SubResource("RectangleShape2D_evidence")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopHud" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(640, 40)
+scale = Vector2(0.78, 0.58)
+texture = ExtResource("3_top_hud")
+
+[node name="BottomHud" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(640, 670)
+scale = Vector2(0.78, 0.44)
+texture = ExtResource("4_bottom_hud")
+
+[node name="IconMoney" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(105, 672)
+scale = Vector2(0.12, 0.12)
+texture = ExtResource("7_money")
+
+[node name="IconStamina" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(365, 672)
+scale = Vector2(0.10, 0.10)
+texture = ExtResource("8_stamina")
+
+[node name="IconAudit" type="Sprite2D" parent="UI"]
+texture_filter = 1
+position = Vector2(826, 672)
+scale = Vector2(0.10, 0.10)
+texture = ExtResource("9_audit")
+
+[node name="TopHudText" type="Label" parent="UI"]
+offset_left = 210.0
+offset_top = 20.0
+offset_right = 1070.0
+offset_bottom = 58.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 22
+text = "GELATO LABS      Meaning of 'Of'      Evidence 0/3"
+horizontal_alignment = 1
+
+[node name="BottomHudText" type="Label" parent="UI"]
+offset_left = 142.0
+offset_top = 650.0
+offset_right = 1180.0
+offset_bottom = 696.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 22
+text = "Money $850      Stamina 100                         Audit Risk Medium"
+
+[node name="Prompt" type="Label" parent="UI"]
+offset_left = 300.0
+offset_top = 602.0
+offset_right = 980.0
+offset_bottom = 638.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 20
+text = "Inspect the room"
+horizontal_alignment = 1
+
+[node name="DialoguePanel" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 118.0
+offset_top = 84.0
+offset_right = 1162.0
+offset_bottom = 324.0
+
+[node name="DialogueBox" type="Sprite2D" parent="UI/DialoguePanel"]
+texture_filter = 1
+position = Vector2(522, 120)
+scale = Vector2(1.3, 0.54)
+texture = ExtResource("5_dialogue")
+
+[node name="DialogueText" type="Label" parent="UI/DialoguePanel"]
+clip_contents = true
+offset_left = 56.0
+offset_top = 52.0
+offset_right = 984.0
+offset_bottom = 188.0
+theme_override_colors/font_color = Color(0.956863, 0.917647, 0.827451, 1)
+theme_override_font_sizes/font_size = 18
+text = "Powder lab"
+autowrap_mode = 2
+vertical_alignment = 1
+
+[node name="ChoiceBox" type="Sprite2D" parent="UI/DialoguePanel"]
+texture_filter = 1
+position = Vector2(522, 218)
+scale = Vector2(2, 0.5)
+texture = ExtResource("6_choices")
+
+[node name="Choices" type="VBoxContainer" parent="UI/DialoguePanel"]
+clip_contents = true
+offset_left = 72.0
+offset_top = 158.0
+offset_right = 972.0
+offset_bottom = 290.0
+theme_override_constants/separation = 6
+
+[node name="Choice1" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(900, 34)
+theme_override_font_sizes/font_size = 15
+text = "1."
+text_overrun_behavior = 3
+
+[node name="Choice2" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(900, 34)
+theme_override_font_sizes/font_size = 15
+text = "2."
+text_overrun_behavior = 3
+
+[node name="Choice3" type="Button" parent="UI/DialoguePanel/Choices"]
+layout_mode = 2
+custom_minimum_size = Vector2(900, 34)
+theme_override_font_sizes/font_size = 15
+text = "3."
+text_overrun_behavior = 3

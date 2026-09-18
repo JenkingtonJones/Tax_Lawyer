@@ -9,10 +9,15 @@ const STREET_SCENE_PATH := "res://scenes/MainStreet.tscn"
 const OFFICE_SCENE_PATH := "res://scenes/OfficeIntake.tscn"
 const CRA_CALL_SCENE_PATH := "res://scenes/CRACall.tscn"
 const GELATO_LABS_SCENE_PATH := "res://scenes/GelatoLabs.tscn"
+const POWDER_LAB_SCENE_PATH := "res://scenes/PowderLab.tscn"
+const IMPORT_WAREHOUSE_SCENE_PATH := "res://scenes/ImportWarehouse.tscn"
+const MEANING_TRIBUNAL_SCENE_PATH := "res://scenes/MeaningOfTribunal.tscn"
 const SPAWN_POINTS := {
-	"law_office": Vector2(234, 318),
-	"tax_office": Vector2(548, 284),
-	"gelato_labs": Vector2(305, 440),
+	"law_office": Vector2(294, 330),
+	"tax_office": Vector2(566, 310),
+	"gelato_labs": Vector2(320, 515),
+	"import_warehouse": Vector2(648, 535),
+	"tribunal": Vector2(1065, 315),
 }
 
 var current_location := ""
@@ -63,9 +68,23 @@ func _unhandled_input(event: InputEvent) -> void:
 		"GelatoLabs":
 			if _gelato_labs_available():
 				_game_state().set("map_spawn", "gelato_labs")
-				get_tree().change_scene_to_file(GELATO_LABS_SCENE_PATH)
+				get_tree().change_scene_to_file(_gelato_scene_path())
 			else:
-				prompt.text = "Gelato Labs: no CRA meeting"
+				prompt.text = _gelato_unavailable_text()
+				prompt.show()
+		"ImportWarehouse":
+			if _import_warehouse_available():
+				_game_state().set("map_spawn", "import_warehouse")
+				get_tree().change_scene_to_file(IMPORT_WAREHOUSE_SCENE_PATH)
+			else:
+				prompt.text = "Import Warehouse: evidence lead locked"
+				prompt.show()
+		"Tribunal":
+			if _tribunal_available():
+				_game_state().set("map_spawn", "tribunal")
+				get_tree().change_scene_to_file(MEANING_TRIBUNAL_SCENE_PATH)
+			else:
+				prompt.text = "Tribunal: no hearing scheduled"
 				prompt.show()
 
 func _setup_animations() -> void:
@@ -103,6 +122,10 @@ func _place_player_at_spawn() -> void:
 			current_location = "LawOffice"
 		"gelato_labs":
 			current_location = "GelatoLabs"
+		"import_warehouse":
+			current_location = "ImportWarehouse"
+		"tribunal":
+			current_location = "Tribunal"
 		_:
 			current_location = "TaxOffice"
 	_update_prompt()
@@ -128,7 +151,11 @@ func _update_prompt() -> void:
 		"LawOffice":
 			prompt.text = "Press E: Law Office" if _office_available() else "Law office: appointment needed"
 		"GelatoLabs":
-			prompt.text = "Press E: Gelato Labs" if _gelato_labs_available() else "Gelato Labs: no CRA meeting"
+			prompt.text = "Press E: Gelato Labs" if _gelato_labs_available() else _gelato_unavailable_text()
+		"ImportWarehouse":
+			prompt.text = "Press E: Import Warehouse" if _import_warehouse_available() else "Import Warehouse: evidence lead locked"
+		"Tribunal":
+			prompt.text = "Press E: Tribunal" if _tribunal_available() else "Tribunal: no hearing scheduled"
 		_:
 			prompt.hide()
 			return
@@ -147,18 +174,49 @@ func _cra_call_needed() -> bool:
 	return bool(game_state.get("cra_guidance_requested")) and not bool(game_state.get("cra_call_completed"))
 
 func _gelato_labs_available() -> bool:
+	return _cra_gelato_meeting_available() or _powder_lab_available()
+
+func _cra_gelato_meeting_available() -> bool:
 	var game_state := _game_state()
 	return bool(game_state.get("gelato_labs_unlocked")) and not bool(game_state.get("cra_meeting_scheduled"))
+
+func _powder_lab_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("meaning_of_case_unlocked")) and not bool(game_state.get("powder_lab_completed"))
+
+func _gelato_scene_path() -> String:
+	return POWDER_LAB_SCENE_PATH if _powder_lab_available() else GELATO_LABS_SCENE_PATH
+
+func _gelato_unavailable_text() -> String:
+	if bool(_game_state().get("powder_lab_completed")):
+		return "Gelato Labs: evidence collected"
+	return "Gelato Labs: no active appointment"
+
+func _import_warehouse_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("import_warehouse_unlocked")) and not bool(game_state.get("warehouse_evidence_completed"))
+
+func _tribunal_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("tribunal_unlocked")) and not bool(game_state.get("meaning_of_case_completed"))
 
 func _update_hud_hint() -> void:
 	var game_state := _game_state()
 	var objective := "Return to client"
 	if _cra_call_needed():
 		objective = "CRA call: Law Office"
-	elif _gelato_labs_available():
+	elif _cra_gelato_meeting_available():
 		objective = "Meet CRA: Gelato Labs"
 	elif bool(game_state.get("cra_meeting_scheduled")) and not bool(game_state.get("client_resolved")):
 		objective = "Tell client: Tax Office"
+	elif _powder_lab_available():
+		objective = "Inspect powder: Gelato Labs"
+	elif _import_warehouse_available():
+		objective = "Trace shipment: Import Warehouse"
+	elif _tribunal_available():
+		objective = "Argue wording: Tribunal"
+	elif bool(game_state.get("meaning_of_case_completed")):
+		objective = "Case won: Meaning of 'Of'"
 
 	hud_hint.text = "Money $%d      Clients %d/5      Risk %s      %s" % [
 		int(game_state.get("money")),

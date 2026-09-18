@@ -120,6 +120,11 @@ Current playable flow:
 6. After the successful call, return to the map and go to Gelato Labs.
 7. Walk to Agent Ledger, press E, and schedule the guidance meeting.
 8. Return to the elderly client and tell her CRA guidance is available.
+9. Receive the `Meaning Of "Of"` file and return to Gelato Labs to inspect the powder, formula, and production notes.
+10. Follow the shipment to Import Warehouse and reconcile the invoice, pallet label, and mixing sheet.
+11. Take the completed record to the Tribunal and argue the meaning of `of` across three rounds.
+
+The city map now has solid building footprints and entrance-sized interaction zones, so the lawyer follows the visible street network to each scene.
 
 Godot controls:
 
@@ -160,10 +165,11 @@ npm run build
 - `src/data/cases.js`: case writing, office choices, and battle actions
 - `src/state/gameState.js`: lightweight campaign state
 - `public/assets/concepts/tax-lawyer-city-map-v1.png`: map art used in the prototype
-- `tax-lawyer-game/scenes`: Godot scenes for the map, street, office call, Gelato Labs, and office intake
-- `tax-lawyer-game/scripts`: Godot gameplay scripts and quest state
+- `tax-lawyer-game/scenes`: Godot scenes for the map, street, office call, Gelato Labs, powder lab, Import Warehouse, Tribunal, and office intake
+- `tax-lawyer-game/scripts`: Godot gameplay scripts, investigation interactions, Tribunal argument flow, and quest state
 - `tax-lawyer-game/assets/processed`: Godot-ready backgrounds, UI, player, NPC, and generated quest assets
 - `tax-lawyer-game/builds/web`: exported Godot web build used for deployment
+- `tax-lawyer-game/tests`: headless quest progression and map-path smoke tests, plus local visual capture tooling
 
 ## Engine Choice
 

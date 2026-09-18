@@ -40,6 +40,8 @@ const CRA_GUIDANCE_DELIVERY := "You return with news: CRA guidance is now availa
 const CRA_GUIDANCE_DELIVERY_FOLLOW_UPS := [
 	"\"Oh,\" she says. \"Then I should bring the blue suitcase too.\"",
 	"The file is still strange, but it finally has a route: sorted materials, scheduled guidance, and no filing until the sticky receipts are identified.",
+	"As you turn to leave, a courier from Gelato Labs hands you a new folder. The cover asks whether flavoured powder is a food preparation \"of milk.\" The quotation marks look professionally hostile.",
+	"Dr. Mirella Affogato has samples and production notes waiting in the powder lab. A second file has begun before the receipt bag has stopped rustling.",
 ]
 const INITIAL_CHOICE_TEXTS := ["1. Missing docs", "2. Accept receipts", "3. CRA guidance"]
 const FACILITATOR_CHOICE_TEXTS := ["1. Oh my.", "2. That's hard.", "3. Say more."]
@@ -278,6 +280,7 @@ func _start_cra_guidance_quest() -> void:
 	_play_worried_briefly()
 
 func _complete_cra_guidance_delivery() -> void:
+	_game_state().call("unlock_meaning_of_case")
 	_queue_map_return(true)
 	_apply_choice(-3, -12, 0, 1, CRA_GUIDANCE_DELIVERY, CRA_GUIDANCE_DELIVERY_FOLLOW_UPS)
 

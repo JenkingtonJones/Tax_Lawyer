@@ -10,7 +10,9 @@ Controls:
 - Press E near the Tax Office marker to enter the street scene.
 - Press E near the Law Office marker to enter office intake, or the CRA phone call when the CRA guidance quest is active.
 - Press E near the Gelato Labs marker after a successful CRA call to meet the CRA representative.
-- In the street scene and Gelato Labs, left/right arrows move the player through the side-view room.
+- After the CRA guidance delivery, return to Gelato Labs to begin the `Meaning of "Of"` case.
+- Press E near Import Warehouse and the Tribunal when those locations unlock.
+- In the street, Gelato Labs, powder lab, warehouse, and Tribunal scenes, left/right arrows move the player through the side-view room.
 - Space or Up: jump.
 - E: talk to the elderly client or Agent Ledger when the prompt appears.
 - Click `Accept receipts`, or press 2, to resolve the street dialogue and then press E to return to the home grid.
@@ -20,16 +22,21 @@ Controls:
 - In the office, press or click 1, 2, and 3 to complete the intake tasks, then press E to return to the home grid.
 - In the CRA phone call, press or click 1, 2, and 3 to answer each CRA verification question. Too many wrong answers disconnect the call and send the player back to the map.
 - In Gelato Labs, walk to Agent Ledger and press E to begin the meeting. The correct meeting answer schedules the guidance appointment.
+- In the powder lab and warehouse, walk to each evidence station and press E. Correctly resolve all three stations, then return to the scene's NPC.
+- At the Tribunal, walk to counsel table, press E, and answer the three argument questions.
 - After a choice result appears, press E again to close the dialogue and return control to the player.
 
 Assembly notes:
 - The street background matched the `1280x720` aspect ratio when scaled from `1672x941`.
 - The Gelato Labs background also uses a `1672x941` source image and is scaled in-scene to the same 16:9 viewport.
+- The powder lab, Import Warehouse, and Tribunal backgrounds use generated `1672x941` source images with open lower-third walk lanes.
 - Player and elderly client animation frames were already on consistent `362x362` transparent canvases.
 - Agent Ledger is a generated transparent PNG placed as a static NPC with an interaction area.
+- Dr. Mirella Affogato, Martin Manifest, and Member Vale are generated transparent NPC sprites.
+- Solid map blockers keep the lawyer out of building footprints while leaving all five active entrances connected by walkable streets.
 - UI panel assets are usable, but the generated HUD bars are very large; they were scaled down in-scene rather than reprocessed.
 - The elderly client worried animation uses the processed third-row frames named `client_elderly_worried_*.png`.
-- Local verification note: the project opens headlessly in Godot `4.6.2.stable` without parser errors.
+- Local verification note: all scenes load in Godot `4.7.1.stable`; `tests/meaning_of_quest_smoke.gd` covers quest progression and map reachability.
 
 Missing-docs interaction test:
 1. On the home grid, walk to the Tax Office marker and press E.
@@ -61,6 +68,20 @@ CRA guidance quest test:
 13. Confirm the meeting schedules guidance and sends the player back to the map.
 14. Return to the Tax Office street, talk to the elderly client, and confirm the client is completed after the guidance delivery.
 
+Meaning of "Of" quest test:
+1. Continue through the new courier pages after delivering the CRA guidance to the elderly client.
+2. On the map, confirm the objective points to Gelato Labs and walk there rather than switching scenes automatically.
+3. Enter Gelato Labs and confirm the powder-lab background and Dr. Affogato appear.
+4. Walk to all three evidence stations. Correct answers are 2 for the ingredient sample, 1 for the production record, and 3 for intended use.
+5. Return to Dr. Affogato after collecting all three facts and confirm Import Warehouse unlocks.
+6. Walk to Import Warehouse on the map and enter it.
+7. Inspect all three warehouse stations. Correct answers are 3 for the invoice, 2 for the pallet label, and 1 for the mixing sheet.
+8. Return to Martin Manifest and confirm the Tribunal unlocks.
+9. Walk to the Tribunal, enter, and approach counsel table before pressing E.
+10. Answer the three argument rounds in order: 2, 1, 3.
+11. Confirm the decision awards $260, reduces audit risk by 12, and adds one completed client matter.
+12. Confirm a wrong evidence answer costs stamina without completing the station, while a wrong Tribunal answer also increases audit risk and repeats the same round.
+
 Text layout test:
 1. Confirm the initial elderly client line wraps inside the dialogue panel.
 2. Confirm each result line remains inside the dialogue panel.
@@ -68,3 +89,4 @@ Text layout test:
 4. Confirm no dialogue or choice text touches the panel border.
 5. Confirm the CRA call choices fit inside the widened choice panel.
 6. Confirm the Gelato Labs meeting choices fit inside the widened choice panel.
+7. Confirm all powder-lab, warehouse, and Tribunal choices fit on one line without touching the panel border.

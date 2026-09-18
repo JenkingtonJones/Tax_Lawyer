@@ -7,6 +7,7 @@ Main scene:
 
 Controls:
 - Arrow keys: move the player around the home grid map.
+- Follow the single gold `NEXT` marker; only the location required by the current story stage is interactive.
 - Press E near the Tax Office marker to enter the street scene.
 - Press E near the Law Office marker to enter office intake, or the CRA phone call when the CRA guidance quest is active.
 - Press E near the Gelato Labs marker after a successful CRA call to meet the CRA representative.
@@ -33,10 +34,12 @@ Assembly notes:
 - Player and elderly client animation frames were already on consistent `362x362` transparent canvases.
 - Agent Ledger is a generated transparent PNG placed as a static NPC with an interaction area.
 - Dr. Mirella Affogato, Martin Manifest, and Member Vale are generated transparent NPC sprites.
-- Solid map blockers keep the lawyer out of building footprints while leaving all five active entrances connected by walkable streets.
-- UI panel assets are usable, but the generated HUD bars are very large; they were scaled down in-scene rather than reprocessed.
+- The home map uses `bg_city_map_walkable.png`, a clean orthogonal-road background without baked labels, HUD elements, action icons, or characters.
+- Collision polygons sit conservatively inside visible buildings, fences, and water. Open pavement and plazas have no hidden blockers, and the player uses a small foot collider.
+- The live map HUD shows score, escrow balance, coffee level, risk, clients, active file, next action, and destination. Narrative milestones add score.
+- Only the current narrative destination receives a marker and interaction prompt.
 - The elderly client worried animation uses the processed third-row frames named `client_elderly_worried_*.png`.
-- Local verification note: all scenes load in Godot `4.7.1.stable`; `tests/meaning_of_quest_smoke.gd` covers quest progression and map reachability.
+- Local verification note: all scenes load in Godot `4.6.2.stable`; `tests/meaning_of_quest_smoke.gd` covers quest progression, visible-road probes, destination ordering, marker visibility, and map reachability.
 
 Missing-docs interaction test:
 1. On the home grid, walk to the Tax Office marker and press E.

@@ -317,7 +317,7 @@ func _set_dialogue_text(text: String) -> void:
 func _update_hud() -> void:
 	var game_state := _game_state()
 	top_hud_text.text = "TAX TRIBUNAL      Argument %d/3      Objections %d" % [mini(current_round + 1, 3), mistakes]
-	bottom_hud_text.text = "Money $%d      Stamina %d                         Audit Risk %s" % [
+	bottom_hud_text.text = "Escrow $%d      Coffee %d%%                      Audit Risk %s" % [
 		int(game_state.get("money")),
 		int(game_state.get("stamina")),
 		_audit_label(),

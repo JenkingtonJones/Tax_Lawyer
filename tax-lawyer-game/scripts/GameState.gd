@@ -2,6 +2,7 @@ extends Node
 
 var money := 850
 var stamina := 100
+var score := 1450
 var audit_risk := 50
 var clients_completed := 0
 var client_resolved := false
@@ -20,6 +21,8 @@ var meaning_of_case_completed := false
 var map_spawn := "tax_office"
 
 func save_street_state(new_money: int, new_stamina: int, new_audit_risk: int, new_clients_completed: int, resolved: bool) -> void:
+	if resolved and not client_resolved:
+		score += 175
 	money = new_money
 	stamina = new_stamina
 	audit_risk = new_audit_risk
@@ -27,11 +30,15 @@ func save_street_state(new_money: int, new_stamina: int, new_audit_risk: int, ne
 	client_resolved = resolved
 
 func start_cra_guidance_quest() -> void:
+	if not cra_guidance_requested:
+		score += 50
 	office_unlocked = true
 	cra_guidance_requested = true
 	map_spawn = "tax_office"
 
 func complete_cra_call(new_stamina: int) -> void:
+	if not cra_call_completed:
+		score += 125
 	stamina = new_stamina
 	cra_call_completed = true
 	gelato_labs_unlocked = true
@@ -42,26 +49,36 @@ func record_failed_cra_call(new_stamina: int) -> void:
 	map_spawn = "law_office"
 
 func schedule_cra_guidance_meeting(new_stamina: int) -> void:
+	if not cra_meeting_scheduled:
+		score += 100
 	stamina = new_stamina
 	cra_meeting_scheduled = true
 	map_spawn = "tax_office"
 
 func unlock_meaning_of_case() -> void:
+	if not meaning_of_case_unlocked:
+		score += 75
 	meaning_of_case_unlocked = true
 
 func complete_powder_lab(new_stamina: int) -> void:
+	if not powder_lab_completed:
+		score += 200
 	stamina = new_stamina
 	powder_lab_completed = true
 	import_warehouse_unlocked = true
 	map_spawn = "gelato_labs"
 
 func complete_warehouse_investigation(new_stamina: int) -> void:
+	if not warehouse_evidence_completed:
+		score += 250
 	stamina = new_stamina
 	warehouse_evidence_completed = true
 	tribunal_unlocked = true
 	map_spawn = "import_warehouse"
 
 func complete_meaning_of_case() -> void:
+	if not meaning_of_case_completed:
+		score += 600
 	money += 260
 	stamina = clampi(stamina - 6, 0, 100)
 	audit_risk = clampi(audit_risk - 12, 0, 100)

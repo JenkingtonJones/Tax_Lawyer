@@ -72,10 +72,10 @@ Possible battle actions:
 ## Art Direction
 
 - Faux 16-bit pixel art with crisp outlines
-- 2.5D/isometric city-map presentation
+- Three-quarter city presentation with a screen-aligned street grid
 - Warm office interiors and muted civic exteriors
 - Dense visual clutter: paper stacks, filing cabinets, street signs, customs gates
-- Retro HUD with score, stamina, risk meter, client count, and active form/code
+- Retro HUD with score, escrow balance, coffee level, risk, client count, active file, and next action
 
 ## First Visual Target
 
@@ -124,7 +124,7 @@ Current playable flow:
 10. Follow the shipment to Import Warehouse and reconcile the invoice, pallet label, and mixing sheet.
 11. Take the completed record to the Tribunal and argue the meaning of `of` across three rounds.
 
-The city map now has solid building footprints and entrance-sized interaction zones, so the lawyer follows the visible street network to each scene.
+The city map uses a clean world-only background, screen-aligned roads, a foot-sized player collider, and conservative collision polygons placed inside visible buildings, fences, and water. Exactly one destination marker is shown for the current narrative action; locked and completed locations are not highlighted.
 
 Godot controls:
 

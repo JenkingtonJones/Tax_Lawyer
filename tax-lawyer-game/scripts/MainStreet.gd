@@ -388,7 +388,7 @@ func _play_worried_briefly() -> void:
 
 func _update_hud() -> void:
 	top_hud_text.text = "Clients %d/5    Time 1:30" % clients_completed
-	bottom_hud_text.text = "Money $%d      Stamina %d                         Audit Risk %s" % [
+	bottom_hud_text.text = "Escrow $%d      Coffee %d%%                      Audit Risk %s" % [
 		money,
 		stamina,
 		_audit_label(),

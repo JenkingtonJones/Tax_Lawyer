@@ -247,7 +247,7 @@ func _update_hud() -> void:
 		mistakes,
 		MAX_MISTAKES,
 	]
-	bottom_hud_text.text = "Money $%d      Stamina %d                         Audit Risk %s" % [
+	bottom_hud_text.text = "Escrow $%d      Coffee %d%%                      Audit Risk %s" % [
 		int(game_state.get("money")),
 		int(game_state.get("stamina")),
 		_audit_label(),

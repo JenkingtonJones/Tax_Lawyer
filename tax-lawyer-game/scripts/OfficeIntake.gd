@@ -171,7 +171,7 @@ func _grab_next_available_focus() -> void:
 func _update_hud() -> void:
 	var game_state := _game_state()
 	top_hud_text.text = "OFFICE INTAKE      Tasks %d/3" % completed_tasks.size()
-	bottom_hud_text.text = "Money $%d      Stamina %d                         Audit Risk %s" % [
+	bottom_hud_text.text = "Escrow $%d      Coffee %d%%                      Audit Risk %s" % [
 		int(game_state.get("money")),
 		int(game_state.get("stamina")),
 		_audit_label(),

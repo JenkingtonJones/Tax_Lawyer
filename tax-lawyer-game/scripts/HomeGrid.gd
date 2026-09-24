@@ -8,6 +8,7 @@ const FEET_MIN := Vector2(12, 96)
 const FEET_MAX := Vector2(1268, 600)
 const STREET_SCENE_PATH := "res://scenes/MainStreet.tscn"
 const OFFICE_SCENE_PATH := "res://scenes/OfficeIntake.tscn"
+const CASE_WRAP_UP_SCENE_PATH := "res://scenes/CaseWrapUp.tscn"
 const CRA_CALL_SCENE_PATH := "res://scenes/CRACall.tscn"
 const GELATO_LABS_SCENE_PATH := "res://scenes/GelatoLabs.tscn"
 const POWDER_LAB_SCENE_PATH := "res://scenes/PowderLab.tscn"
@@ -298,6 +299,8 @@ func _update_prompt() -> void:
 
 func _objective_info() -> Dictionary:
 	var game_state := _game_state()
+	if bool(game_state.get("case_wrap_up_pending")):
+		return {"target": "LawOffice", "instruction": "FILE THE TRIBUNAL DECISION"}
 	if _cra_call_needed():
 		return {"target": "LawOffice", "instruction": "MAKE THE CRA GUIDANCE CALL"}
 	if _cra_gelato_meeting_available():
@@ -337,6 +340,8 @@ func _update_hud() -> void:
 
 func _active_file_text() -> String:
 	var game_state := _game_state()
+	if bool(game_state.get("case_wrap_up_pending")):
+		return "FILE: DECISION TO FILE"
 	if bool(game_state.get("meaning_of_case_completed")):
 		return "FILE: CLOSED"
 	if bool(game_state.get("meaning_of_case_unlocked")):
@@ -344,6 +349,8 @@ func _active_file_text() -> String:
 	return "FILE: B2 AUDIT"
 
 func _office_scene_path() -> String:
+	if bool(_game_state().get("case_wrap_up_pending")):
+		return CASE_WRAP_UP_SCENE_PATH
 	return CRA_CALL_SCENE_PATH if _cra_call_needed() else OFFICE_SCENE_PATH
 
 func _cra_call_needed() -> bool:

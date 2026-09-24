@@ -13,6 +13,7 @@ Controls:
 - Press E near the Gelato Labs marker after a successful CRA call to meet the CRA representative.
 - After the CRA guidance delivery, return to Gelato Labs to begin the `Meaning of "Of"` case.
 - Press E near Import Warehouse and the Tribunal when those locations unlock.
+- After the Tribunal decision, follow the Law Office marker, file the result, and start the next workday. Score, escrow, risk, and completed-client totals carry forward.
 - In the street, Gelato Labs, powder lab, warehouse, and Tribunal scenes, left/right arrows move the player through the side-view room.
 - Space or Up: jump.
 - E: talk to the elderly client or Agent Ledger when the prompt appears.
@@ -38,6 +39,7 @@ Assembly notes:
 - Collision polygons sit conservatively inside visible buildings, fences, and water. Open pavement and plazas have no hidden blockers, and the player uses a small foot collider.
 - The live map HUD shows score, escrow balance, coffee level, risk, clients, active file, next action, and destination. Narrative milestones add score.
 - Only the current narrative destination receives a marker and interaction prompt.
+- The quest loop never ends on an empty map: Tribunal completion creates a Law Office filing objective, and filing creates the next Tax Office objective.
 - The elderly client worried animation uses the processed third-row frames named `client_elderly_worried_*.png`.
 - Local verification note: all scenes load in Godot `4.6.2.stable`; `tests/meaning_of_quest_smoke.gd` covers quest progression, visible-road probes, destination ordering, marker visibility, and map reachability.
 

@@ -83,9 +83,29 @@ func _run() -> void:
 	await _remove_scene(tribunal)
 
 	map_scene = await _add_scene("res://scenes/HomeGrid.tscn")
-	_check(map_scene.get("active_target") == "", "A completed case should not leave a false destination marker")
-	_assert_single_visible_marker(map_scene, "")
+	_check(map_scene.get("active_target") == "LawOffice", "A completed case should route the player to filing")
+	_check(map_scene.call("_office_scene_path") == "res://scenes/CaseWrapUp.tscn", "Law Office should open the case wrap-up")
+	_assert_single_visible_marker(map_scene, "LawOffice")
 	await _remove_scene(map_scene)
+
+	var completed_money := int(game_state.get("money"))
+	var completed_score := int(game_state.get("score"))
+	var completed_clients := int(game_state.get("clients_completed"))
+	var wrap_up := await _add_scene("res://scenes/CaseWrapUp.tscn")
+	wrap_up.call("_start_next_workday")
+	await process_frame
+	_check(not bool(game_state.get("case_wrap_up_pending")), "Filing should clear the wrap-up objective")
+	_check(not bool(game_state.get("meaning_of_case_completed")), "The next workday should reset the story chain")
+	_check(game_state.get("money") == completed_money, "Starting a new day should preserve escrow")
+	_check(game_state.get("score") == completed_score, "Starting a new day should preserve score")
+	_check(game_state.get("clients_completed") == completed_clients, "Starting a new day should preserve completed clients")
+	_check(game_state.get("map_spawn") == "tax_office", "The next workday should begin at the client office")
+	var next_day_map := get_current_scene()
+	if next_day_map == null or not next_day_map.has_method("_objective_info"):
+		next_day_map = await _add_scene("res://scenes/HomeGrid.tscn")
+	_check(next_day_map.get("active_target") == "TaxOffice", "A new workday should immediately provide a destination")
+	_assert_single_visible_marker(next_day_map, "TaxOffice")
+	await _remove_scene(next_day_map)
 
 	if failures > 0:
 		print("Meaning of 'Of' quest smoke test failed with %d checks" % failures)
@@ -232,4 +252,5 @@ func _reset_state(game_state: Node) -> void:
 	game_state.set("warehouse_evidence_completed", false)
 	game_state.set("tribunal_unlocked", false)
 	game_state.set("meaning_of_case_completed", false)
+	game_state.set("case_wrap_up_pending", false)
 	game_state.set("map_spawn", "tax_office")

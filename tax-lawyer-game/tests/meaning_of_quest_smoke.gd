@@ -7,6 +7,40 @@ func _init() -> void:
 
 func _run() -> void:
 	var game_state := get_root().get_node("GameState")
+	_reset_new_matter(game_state)
+	var receipt_street := await _add_scene("res://scenes/MainStreet.tscn")
+	receipt_street.call("_open_dialogue")
+	receipt_street.call("_select_choice", 2)
+	_check(bool(game_state.get("client_resolved")), "Accepting the receipts should resolve the street interaction")
+	_check(bool(game_state.get("office_unlocked")), "Accepting the receipts should unlock office intake")
+	await create_timer(1.1).timeout
+	await _remove_scene(receipt_street)
+
+	var receipt_office := await _add_scene("res://scenes/OfficeIntake.tscn")
+	_complete_office_task(receipt_office, 1)
+	_complete_office_task(receipt_office, 2)
+	receipt_office.call("_select_choice", 3)
+	_check(bool(game_state.get("office_completed")), "Completing receipt intake should mark the office work complete")
+	await _remove_scene(receipt_office)
+
+	var receipt_map := await _add_scene("res://scenes/HomeGrid.tscn")
+	_check(receipt_map.get("active_target") == "TaxOffice", "Completed receipt intake should route back to the client")
+	_assert_single_visible_marker(receipt_map, "TaxOffice")
+	await _remove_scene(receipt_map)
+
+	receipt_street = await _add_scene("res://scenes/MainStreet.tscn")
+	receipt_street.call("_open_dialogue")
+	_check(bool(game_state.get("cra_guidance_requested")), "The receipt review should start the CRA guidance quest")
+	_check(receipt_street.get_node("UI/DialoguePanel").visible, "The receipt review dialogue should be visible")
+	_check(bool(receipt_street.get("waiting_for_continue")), "The receipt review should wait for the player to continue")
+	await create_timer(1.1).timeout
+	await _remove_scene(receipt_street)
+
+	receipt_map = await _add_scene("res://scenes/HomeGrid.tscn")
+	_check(receipt_map.get("active_target") == "LawOffice", "The receipt review should route to the CRA call")
+	_assert_single_visible_marker(receipt_map, "LawOffice")
+	await _remove_scene(receipt_map)
+
 	_reset_state(game_state)
 	game_state.set("client_resolved", false)
 	game_state.set("meaning_of_case_unlocked", false)
@@ -118,6 +152,10 @@ func _answer_station(scene: Node, station_id: String, option: int) -> void:
 	scene.call("_show_question", station_id)
 	scene.call("_select_choice", option)
 	scene.call("_advance_continue")
+
+func _complete_office_task(scene: Node, option: int) -> void:
+	scene.call("_select_choice", option)
+	scene.call("_show_task_menu")
 
 func _add_scene(path: String) -> Node:
 	var scene: Node = load(path).instantiate()
@@ -254,3 +292,13 @@ func _reset_state(game_state: Node) -> void:
 	game_state.set("meaning_of_case_completed", false)
 	game_state.set("case_wrap_up_pending", false)
 	game_state.set("map_spawn", "tax_office")
+
+func _reset_new_matter(game_state: Node) -> void:
+	_reset_state(game_state)
+	game_state.set("client_resolved", false)
+	game_state.set("office_unlocked", false)
+	game_state.set("office_completed", false)
+	game_state.set("cra_guidance_requested", false)
+	game_state.set("cra_call_completed", false)
+	game_state.set("gelato_labs_unlocked", false)
+	game_state.set("cra_meeting_scheduled", false)

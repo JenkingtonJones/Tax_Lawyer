@@ -19,6 +19,7 @@ Controls:
 - E: talk to the elderly client or Agent Ledger when the prompt appears.
 - Click `Accept receipts`, or press 2, to resolve the street dialogue and then press E to return to the home grid.
 - Click `CRA guidance`, or press 3, to start the CRA guidance quest. This does not resolve the client immediately.
+- If `Missing docs` or `Accept receipts` is chosen instead, finish the three Law Office intake tasks. The map then highlights the Tax Office for a receipt-review appointment, which connects the branch to the CRA guidance call.
 - Click `Missing docs`, or press 1, to start the multi-step missing-documents dialogue. Then click or press 1, 2, or 3 through the facilitator prompts until the appointment result appears.
 - Press E on the appointment result to return to the home grid map.
 - In the office, press or click 1, 2, and 3 to complete the intake tasks, then press E to return to the home grid.
@@ -40,6 +41,7 @@ Assembly notes:
 - The live map HUD shows score, escrow balance, coffee level, risk, clients, active file, next action, and destination. Narrative milestones add score.
 - Only the current narrative destination receives a marker and interaction prompt.
 - The quest loop never ends on an empty map: Tribunal completion creates a Law Office filing objective, and filing creates the next Tax Office objective.
+- Completing receipt intake also cannot end on an empty map: it creates a Tax Office follow-up objective, and that conversation creates the Law Office CRA-call objective.
 - The elderly client worried animation uses the processed third-row frames named `client_elderly_worried_*.png`.
 - Local verification note: all scenes load in Godot `4.6.2.stable`; `tests/meaning_of_quest_smoke.gd` covers quest progression, visible-road probes, destination ordering, marker visibility, and map reachability.
 

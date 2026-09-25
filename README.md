@@ -125,6 +125,8 @@ Current playable flow:
 11. Take the completed record to the Tribunal and argue the meaning of `of` across three rounds.
 12. Return to the Law Office to file the decision, then start the next workday with a fresh Tax Office objective.
 
+The receipt-help routes also join this sequence. After accepting the receipts or documenting the missing records, complete the three office-intake tasks, return to the highlighted Tax Office for the follow-up appointment, and then go to the Law Office for the CRA call.
+
 The city map uses a clean world-only background, screen-aligned roads, a foot-sized player collider, and conservative collision polygons placed inside visible buildings, fences, and water. Exactly one destination marker is shown for the current narrative action; locked and completed locations are not highlighted. Completed cases route to a Law Office filing scene rather than leaving the map without a destination.
 
 Godot controls:

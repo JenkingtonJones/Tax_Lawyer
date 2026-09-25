@@ -34,6 +34,11 @@ const CRA_GUIDANCE_START_FOLLOW_UPS := [
 	"She leans closer. \"Can you get that guidance for me? I tried calling once, but the music asked me a question.\"",
 	"You agree to make the call from the office. This will require closed blinds, a notepad, and the kind of patience usually reserved for classified documents.",
 ]
+const RECEIPT_INTAKE_REVIEW := "The receipts are sorted, but the intake exposed a remittance question the documents cannot answer. You explain that the file now needs formal CRA guidance."
+const RECEIPT_INTAKE_FOLLOW_UPS := [
+	"She nods, then asks whether CRA will want the blue suitcase too. You decide not to ask what is in it until the guidance arrives.",
+	"You schedule the guidance call from the Law Office. The blinds, notepad, and unnecessarily serious telephone are waiting.",
+]
 const CRA_GUIDANCE_WAITING_CALL := "You still need to make the CRA guidance call from the Law Office. The client clutches the receipt bag like it might testify against her."
 const CRA_GUIDANCE_WAITING_GELATO := "CRA will not finish this over the phone. A representative is waiting at Gelato Labs, which is apparently a normal sentence now."
 const CRA_GUIDANCE_DELIVERY := "You return with news: CRA guidance is now available. She should bring the receipt bag, the missing slips, and anything labelled maybe taxes."
@@ -197,7 +202,11 @@ func _open_dialogue() -> void:
 	player.velocity = Vector2.ZERO
 	prompt.hide()
 	waiting_for_continue = false
-	if client_resolved:
+	if _receipt_intake_follow_up_available():
+		_start_post_intake_guidance()
+		dialogue_panel.show()
+		return
+	elif client_resolved:
 		_set_result_layout()
 		_queue_map_return(true)
 	elif _cra_meeting_scheduled():
@@ -279,6 +288,13 @@ func _start_cra_guidance_quest() -> void:
 	_show_result_pages(OPTION_3_RESULT, CRA_GUIDANCE_START_FOLLOW_UPS)
 	_play_worried_briefly()
 
+func _start_post_intake_guidance() -> void:
+	var game_state := _game_state()
+	game_state.call("start_cra_guidance_quest")
+	_queue_map_return(true)
+	_show_result_pages(RECEIPT_INTAKE_REVIEW, RECEIPT_INTAKE_FOLLOW_UPS)
+	_play_worried_briefly()
+
 func _complete_cra_guidance_delivery() -> void:
 	_game_state().call("unlock_meaning_of_case")
 	_queue_map_return(true)
@@ -292,6 +308,7 @@ func _show_result_pages(result_text: String, follow_up_pages: Array = []) -> voi
 	_set_dialogue_text(result_text)
 	choice_box.hide()
 	choices.hide()
+	dialogue_panel.show()
 	_show_continue_prompt()
 
 func _apply_choice(stamina_delta: int, audit_delta: int, money_delta: int, client_delta: int, result_text: String, follow_up_pages: Array = []) -> void:
@@ -411,6 +428,10 @@ func _load_state() -> void:
 
 func _cra_guidance_requested() -> bool:
 	return bool(_game_state().get("cra_guidance_requested"))
+
+func _receipt_intake_follow_up_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("office_completed")) and client_resolved and not bool(game_state.get("cra_guidance_requested"))
 
 func _cra_call_completed() -> bool:
 	return bool(_game_state().get("cra_call_completed"))

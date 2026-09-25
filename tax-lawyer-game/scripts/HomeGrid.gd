@@ -313,6 +313,8 @@ func _objective_info() -> Dictionary:
 		return {"target": "ImportWarehouse", "instruction": "TRACE THE IMPORT SHIPMENT"}
 	if _tribunal_available():
 		return {"target": "Tribunal", "instruction": "ARGUE THE MEANING OF OF"}
+	if _receipt_follow_up_available():
+		return {"target": "TaxOffice", "instruction": "REVIEW THE RECEIPT INTAKE"}
 	if bool(game_state.get("office_unlocked")) and not bool(game_state.get("office_completed")) and not bool(game_state.get("cra_guidance_requested")):
 		return {"target": "LawOffice", "instruction": "COMPLETE THE OFFICE INTAKE"}
 	if not bool(game_state.get("client_resolved")):
@@ -356,6 +358,10 @@ func _office_scene_path() -> String:
 func _cra_call_needed() -> bool:
 	var game_state := _game_state()
 	return bool(game_state.get("cra_guidance_requested")) and not bool(game_state.get("cra_call_completed"))
+
+func _receipt_follow_up_available() -> bool:
+	var game_state := _game_state()
+	return bool(game_state.get("office_completed")) and bool(game_state.get("client_resolved")) and not bool(game_state.get("cra_guidance_requested"))
 
 func _cra_gelato_meeting_available() -> bool:
 	var game_state := _game_state()

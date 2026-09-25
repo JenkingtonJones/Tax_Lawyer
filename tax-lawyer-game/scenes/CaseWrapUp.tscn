@@ -1,0 +1,101 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_tax_office_intake.png" id="1_bg"]
+[ext_resource type="Script" path="res://scripts/CaseWrapUp.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://assets/processed/player/idle/player_idle_01.png" id="3_player"]
+
+[node name="CaseWrapUp" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(640, 360)
+scale = Vector2(0.76555, 0.765143)
+texture = ExtResource("1_bg")
+
+[node name="Player" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(775, 530)
+scale = Vector2(0.42, 0.42)
+texture = ExtResource("3_player")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Header" type="ColorRect" parent="UI"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1280.0
+offset_bottom = 78.0
+color = Color(0.025, 0.047, 0.062, 0.96)
+
+[node name="Title" type="Label" parent="UI/Header"]
+offset_left = 48.0
+offset_top = 13.0
+offset_right = 610.0
+offset_bottom = 61.0
+theme_override_colors/font_color = Color(0.98, 0.82, 0.38, 1)
+theme_override_font_sizes/font_size = 26
+text = "LAW OFFICE  |  END-OF-DAY FILING"
+vertical_alignment = 1
+
+[node name="Status" type="Label" parent="UI/Header"]
+offset_left = 620.0
+offset_top = 17.0
+offset_right = 1232.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0.88, 0.91, 0.84, 1)
+theme_override_font_sizes/font_size = 17
+text = "SCORE 000000    ESCROW $0    COFFEE 0%    CLIENTS 0/5"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ChecklistTitle" type="Label" parent="UI"]
+offset_left = 845.0
+offset_top = 158.0
+offset_right = 1218.0
+offset_bottom = 195.0
+theme_override_colors/font_color = Color(0.12, 0.11, 0.09, 1)
+theme_override_font_sizes/font_size = 21
+text = "DECISION FILING CHECKLIST"
+horizontal_alignment = 1
+
+[node name="Checklist" type="Label" parent="UI"]
+offset_left = 865.0
+offset_top = 205.0
+offset_right = 1200.0
+offset_bottom = 421.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.78, 1)
+theme_override_font_sizes/font_size = 19
+text = "[FILED]  SIGNED DECISION\n\n[FILED]  REASONS INDEXED\n\n[FILED]  CLIENT NOTIFIED\n\n[FILED]  ESCROW POSTED"
+vertical_alignment = 1
+
+[node name="SummaryTitle" type="Label" parent="UI"]
+offset_left = 58.0
+offset_top = 565.0
+offset_right = 745.0
+offset_bottom = 602.0
+theme_override_colors/font_color = Color(0.98, 0.82, 0.38, 1)
+theme_override_font_sizes/font_size = 22
+text = "TRIBUNAL DECISION FILED"
+
+[node name="Summary" type="Label" parent="UI"]
+offset_left = 58.0
+offset_top = 603.0
+offset_right = 750.0
+offset_bottom = 698.0
+theme_override_colors/font_color = Color(0.96, 0.92, 0.83, 1)
+theme_override_font_sizes/font_size = 17
+text = "The decision is safely in the client file."
+autowrap_mode = 2
+
+[node name="ContinueButton" type="Button" parent="UI"]
+offset_left = 835.0
+offset_top = 615.0
+offset_right = 1205.0
+offset_bottom = 674.0
+theme_override_font_sizes/font_size = 20
+text = "START NEXT WORKDAY"

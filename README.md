@@ -72,10 +72,10 @@ Possible battle actions:
 ## Art Direction
 
 - Faux 16-bit pixel art with crisp outlines
-- 2.5D/isometric city-map presentation
+- Three-quarter city presentation with a screen-aligned street grid
 - Warm office interiors and muted civic exteriors
 - Dense visual clutter: paper stacks, filing cabinets, street signs, customs gates
-- Retro HUD with score, stamina, risk meter, client count, and active form/code
+- Retro HUD with score, escrow balance, coffee level, risk, client count, active file, and next action
 
 ## First Visual Target
 
@@ -106,6 +106,45 @@ Included launch files:
 - `Dog Chew Apocalypse`
 - `Hot Chicken Incident`
 
+## Godot Vertical Slice
+
+The `tax-lawyer-game` folder contains the current Godot 4 build used for the deployable web version.
+
+Current playable flow:
+
+1. Start at `HomeGrid.tscn`.
+2. Enter the Tax Office street and talk to the elderly client.
+3. Choose `CRA guidance` to start the CRA guidance quest.
+4. Return to the map and go to the Law Office for the spy-like CRA phone call.
+5. Answer the five 3-option CRA call questions.
+6. After the successful call, return to the map and go to Gelato Labs.
+7. Walk to Agent Ledger, press E, and schedule the guidance meeting.
+8. Return to the elderly client and tell her CRA guidance is available.
+9. Receive the `Meaning Of "Of"` file and return to Gelato Labs to inspect the powder, formula, and production notes.
+10. Follow the shipment to Import Warehouse and reconcile the invoice, pallet label, and mixing sheet.
+11. Take the completed record to the Tribunal and argue the meaning of `of` across three rounds.
+12. Return to the Law Office to file the decision, then start the next workday with a fresh Tax Office objective.
+
+The receipt-help routes also join this sequence. After accepting the receipts or documenting the missing records, complete the three office-intake tasks, return to the highlighted Tax Office for the follow-up appointment, and then go to the Law Office for the CRA call.
+
+The city map uses a clean world-only background, screen-aligned roads, a foot-sized player collider, and conservative collision polygons placed inside visible buildings, fences, and water. Exactly one destination marker is shown for the current narrative action; locked and completed locations are not highlighted. Completed cases route to a Law Office filing scene rather than leaving the map without a destination.
+
+Godot controls:
+
+- Arrow keys: move on the map.
+- Left/right arrows: walk in side-view scenes.
+- Space or Up: jump in side-view scenes.
+- E: interact or advance dialogue.
+- 1, 2, 3: choose dialogue answers.
+
+Godot web export:
+
+```bash
+godot --headless --path tax-lawyer-game --export-release Web builds/web/index.html
+```
+
+The deployable web files live in `tax-lawyer-game/builds/web`.
+
 ## Run
 
 ```bash
@@ -129,6 +168,11 @@ npm run build
 - `src/data/cases.js`: case writing, office choices, and battle actions
 - `src/state/gameState.js`: lightweight campaign state
 - `public/assets/concepts/tax-lawyer-city-map-v1.png`: map art used in the prototype
+- `tax-lawyer-game/scenes`: Godot scenes for the map, street, office call, Gelato Labs, powder lab, Import Warehouse, Tribunal, and office intake
+- `tax-lawyer-game/scripts`: Godot gameplay scripts, investigation interactions, Tribunal argument flow, and quest state
+- `tax-lawyer-game/assets/processed`: Godot-ready backgrounds, UI, player, NPC, and generated quest assets
+- `tax-lawyer-game/builds/web`: exported Godot web build used for deployment
+- `tax-lawyer-game/tests`: headless quest progression and map-path smoke tests, plus local visual capture tooling
 
 ## Engine Choice
 

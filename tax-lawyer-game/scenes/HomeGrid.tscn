@@ -1,0 +1,256 @@
+[gd_scene load_steps=10 format=3 uid="uid://tax_lawyer_home_grid"]
+
+[ext_resource type="Texture2D" path="res://assets/processed/backgrounds/bg_city_map_walkable.png" id="1_map"]
+[ext_resource type="Script" path="res://scripts/HomeGrid.gd" id="2_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_location"]
+size = Vector2(104, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player_feet"]
+size = Vector2(24, 12)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud"]
+bg_color = Color(0.025, 0.047, 0.062, 0.97)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.62, 0.48, 0.25, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_playfield"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.07, 0.105, 0.125, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
+bg_color = Color(0.025, 0.047, 0.062, 0.94)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.94, 0.7, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coffee_bg"]
+bg_color = Color(0.11, 0.075, 0.055, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.38, 0.27, 0.16, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coffee_fill"]
+bg_color = Color(0.73, 0.43, 0.19, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.72, 0.32, 1)
+
+[node name="HomeGrid" type="Node2D"]
+script = ExtResource("2_script")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(640, 360)
+scale = Vector2(0.76555, 0.765143)
+texture = ExtResource("1_map")
+
+[node name="WorldBlockers" type="Node2D" parent="."]
+
+[node name="Locations" type="Node2D" parent="."]
+
+[node name="LawOffice" type="Area2D" parent="Locations"]
+position = Vector2(160, 238)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/LawOffice"]
+shape = SubResource("RectangleShape2D_location")
+
+[node name="TaxOffice" type="Area2D" parent="Locations"]
+position = Vector2(500, 238)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/TaxOffice"]
+shape = SubResource("RectangleShape2D_location")
+
+[node name="GelatoLabs" type="Area2D" parent="Locations"]
+position = Vector2(151, 558)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/GelatoLabs"]
+shape = SubResource("RectangleShape2D_location")
+
+[node name="ImportWarehouse" type="Area2D" parent="Locations"]
+position = Vector2(500, 558)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/ImportWarehouse"]
+shape = SubResource("RectangleShape2D_location")
+
+[node name="Tribunal" type="Area2D" parent="Locations"]
+position = Vector2(1080, 238)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Locations/Tribunal"]
+shape = SubResource("RectangleShape2D_location")
+
+[node name="LocationMarkers" type="Node2D" parent="."]
+z_index = 20
+
+[node name="Player" type="CharacterBody2D" parent="."]
+z_index = 10
+position = Vector2(500, 204)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(0, 34)
+shape = SubResource("RectangleShape2D_player_feet")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Player"]
+texture_filter = 1
+scale = Vector2(0.23, 0.23)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PlayfieldFrame" type="Panel" parent="UI"]
+mouse_filter = 2
+offset_right = 1280.0
+offset_top = 82.0
+offset_bottom = 612.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_playfield")
+
+[node name="TopBar" type="Panel" parent="UI"]
+mouse_filter = 2
+offset_right = 1280.0
+offset_bottom = 84.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+
+[node name="Score" type="Label" parent="UI/TopBar"]
+offset_left = 18.0
+offset_top = 12.0
+offset_right = 250.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.94, 0.89, 0.74, 1)
+theme_override_font_sizes/font_size = 19
+text = "SCORE 001450"
+
+[node name="Title" type="Label" parent="UI/TopBar"]
+offset_left = 430.0
+offset_top = 8.0
+offset_right = 850.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.96, 0.95, 0.88, 1)
+theme_override_font_sizes/font_size = 27
+text = "TAX LAWYER"
+horizontal_alignment = 1
+
+[node name="ActiveFile" type="Label" parent="UI/TopBar"]
+offset_left = 925.0
+offset_top = 12.0
+offset_right = 1260.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.72, 0.85, 0.58, 1)
+theme_override_font_sizes/font_size = 17
+text = "FILE: B2 AUDIT"
+horizontal_alignment = 2
+
+[node name="Objective" type="Label" parent="UI/TopBar"]
+offset_left = 220.0
+offset_top = 49.0
+offset_right = 1060.0
+offset_bottom = 76.0
+theme_override_colors/font_color = Color(0.95, 0.72, 0.27, 1)
+theme_override_font_sizes/font_size = 17
+text = "NEXT ACTION: RETURN TO CLIENT"
+horizontal_alignment = 1
+
+[node name="PromptPanel" type="Panel" parent="UI"]
+visible = false
+mouse_filter = 2
+offset_left = 390.0
+offset_top = 558.0
+offset_right = 890.0
+offset_bottom = 603.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_prompt")
+
+[node name="Prompt" type="Label" parent="UI/PromptPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.96, 0.92, 0.83, 1)
+theme_override_font_sizes/font_size = 18
+text = "Press E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomBar" type="Panel" parent="UI"]
+mouse_filter = 2
+offset_top = 608.0
+offset_right = 1280.0
+offset_bottom = 720.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hud")
+
+[node name="Escrow" type="Label" parent="UI/BottomBar"]
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 250.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0.55, 0.83, 0.48, 1)
+theme_override_font_sizes/font_size = 22
+text = "ESCROW  $850"
+
+[node name="Coffee" type="Label" parent="UI/BottomBar"]
+offset_left = 270.0
+offset_top = 13.0
+offset_right = 505.0
+offset_bottom = 42.0
+theme_override_colors/font_color = Color(0.95, 0.74, 0.38, 1)
+theme_override_font_sizes/font_size = 18
+text = "COFFEE  100%"
+
+[node name="CoffeeBar" type="ProgressBar" parent="UI/BottomBar"]
+offset_left = 270.0
+offset_top = 54.0
+offset_right = 505.0
+offset_bottom = 76.0
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBoxFlat_coffee_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_coffee_fill")
+
+[node name="Risk" type="Label" parent="UI/BottomBar"]
+offset_left = 535.0
+offset_top = 18.0
+offset_right = 720.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0.95, 0.67, 0.31, 1)
+theme_override_font_sizes/font_size = 19
+text = "RISK  MEDIUM"
+
+[node name="Clients" type="Label" parent="UI/BottomBar"]
+offset_left = 735.0
+offset_top = 18.0
+offset_right = 900.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0.88, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 19
+text = "CLIENTS  0/5"
+
+[node name="NextLocation" type="Label" parent="UI/BottomBar"]
+offset_left = 910.0
+offset_top = 12.0
+offset_right = 1258.0
+offset_bottom = 85.0
+theme_override_colors/font_color = Color(0.95, 0.72, 0.27, 1)
+theme_override_font_sizes/font_size = 17
+text = "DESTINATION\nTAX OFFICE"
+horizontal_alignment = 1
+vertical_alignment = 1

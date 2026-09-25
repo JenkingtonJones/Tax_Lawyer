@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Godot editor/import cache. Regenerated locally by the editor.
+.godot/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Downloaded Godot export template archives do not belong in the repo.
+*.tpz
